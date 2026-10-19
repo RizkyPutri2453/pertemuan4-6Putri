@@ -1,0 +1,121 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+	<!-- Content Header (Page header) -->
+	<div class="content-header">
+	    <div class="container-fluid">
+	        <div class="row mb-2 align-items-center">
+	            <div class="col-sm-6">
+	                <h1 class="m-0 text-dark">Starter Page
+	                </h1>
+	            </div><!-- /.col -->
+	            <div class="col-sm-6">
+	                <ol class="breadcrumb float-sm-right bg-transparent p-0 m-0">
+	                    <li class="breadcrumb-item"><a href="">Home</a></li>
+						<li class="breadcrumb-item active">Starter Page</li>
+	                </ol>
+	            </div><!-- /.col -->
+	        </div><!-- /.row -->
+	    </div><!-- /.container-fluid -->
+	</div><!-- /.content-header -->
+
+	<!-- Main content -->
+	<div class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="card">
+						<div class="card-body">
+							<h3 class="card-title">Ubah Produk</h3>
+							<div class="clearfix"></div>
+
+							<p class="card-text">
+								<form id="formUtama" action="<?= base_url('admin/produk/ubah/' . $produk['id_produk']) ?>" method="post" enctype="multipart/form-data">
+									<div class="mb-3">
+										<label for="nama_produk" class="form-label">Nama Produk</label>
+										<input type="text" class="form-control" name="nama_produk" id="nama_produk" aria-describedby="Nama produk" value="<?= $produk['nama'] ?>">
+										<small class="text-danger"><em><?= form_error('nama_produk') ?></em></small>
+									</div>
+
+									<div class="mb-3">
+									    <label for="kategori_produk" class="form-label">Kategori Produk</label>
+									    <select name="kategori_produk" id="kategori_produk" class="form-control">
+									        <option value="" selected>-- Pilih Kategori --</option>
+									        <?php foreach ($list_kategori as $kategori) : ?>
+									            <option value="<?= $kategori['id_kategori'] ?>" <?= ($produk['kategori_id'] == $kategori['id_kategori']) ? 'selected' : '' ?>><?= $kategori['nama'] ?></option>
+									        <?php endforeach ?>
+									    </select>
+									    <small class="text-danger"><em><?= form_error('kategori_produk') ?></em></small>
+									</div>
+
+									<div class="mb-3">
+										<label for="harga_produk" class="form-label">Harga</label>
+										<div class="input-group">
+											<span class="input-group-text" id="basic-addon1">Rp</span>
+											<input type="number" name="harga_produk" id="harga_produk" class="form-control" value="<?= $produk['harga'] ?>">
+										</div>
+									</div>
+
+									<div class="mb-3">
+										<label for="stok_produk" class="form-label">Stok Produk</label>
+										<input type="text" class="form-control" name="stok_produk" id="stok_produk" aria-describedby="Stok produk" value="<?= $produk['stok'] ?>">
+										<small class="text-danger"><em><?= form_error('stok_produk') ?></em></small>
+									</div>
+
+									<div class="mb-3">
+										<label for="gambar_produk" class="form-label">Gambar Produk</label>
+										<input class="form-control" type="file" id="gambar_produk" name="gambar_produk[]" style="height: auto; padding: 12px 15px;" multiple>
+										<?= $this->session->flashdata('message'); ?>
+									</div>
+								</form> 
+
+									<?php 
+									// get gambar dengan id produk
+									$list_gambar = $gambar_model->get_by_produk_id($produk['id_produk']);
+									?>
+									<div class="row mb-3">
+									    <?php foreach ($list_gambar as $gambar) : ?>
+									        <div class="col-lg-3">
+									            <div class="card" style="width: 18rem;">
+									                <img src="<?= base_url('uploads/produk/') . $gambar['nama_gambar'] ?>" class="card-img-top" style="height: 200px; object-fit: cover;">
+														<div class="card-body">
+														    <div class="d-grid gap-2">
+														        <!-- Tombol Ubah -->
+														        <form action="<?= base_url('admin/produk/ubah_gambar_satuan/' . $gambar['id_gambar']) ?>" method="post" enctype="multipart/form-data">
+														            <input type="hidden" name="produk_id" value="<?= $produk['id_produk'] ?>">
+														            <input type="file" name="gambar_baru" id="ganti_gambar_<?= $gambar['id_gambar'] ?>" style="display: none;" accept="image/*" required onchange="this.form.submit()">
+														            
+														            <label for="ganti_gambar_<?= $gambar['id_gambar'] ?>" class="btn btn-warning text-white w-100 mb-0" style="cursor: pointer;">
+														                Ubah
+														            </label>
+														        </form>
+
+														        <!-- Tombol Hapus -->
+														        <a href="<?= base_url('admin/produk/hapus_gambar/' . $gambar['id_gambar']) ?>" class="btn btn-danger w-100" onclick="return confirm('Apakah Anda yakin ingin menghapus gambar ini?')">
+														            Hapus
+														        </a>
+														    </div>
+														</div>
+													</div>
+									        </div>
+									    <?php endforeach ?>
+									</div>
+
+									<div class="mb-3">
+										<label for="deskripsi_produk" class="form-label">Deskripsi</label>
+										<textarea name="deskripsi_produk" form="formUtama" id="deskripsi_produk" cols="30" rows="10" class="form-control"><?= $produk['deskripsi'] ?></textarea>
+									</div>
+
+									<button type="submit" form="formUtama" class="btn btn-primary">Ubah</button>
+									<a href="<?= base_url('admin/produk') ?>" class="btn btn-danger">Kembali</a>
+							</p>
+						</div>
+					</div>
+				</div>
+				<!-- /.col-md-6 -->
+			</div>
+			<!-- /.row -->
+		</div><!-- /.container-fluid -->
+	</div>
+	<!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
